@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad unit log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a;
+    --panel:#1a1f27;
+    --panel-2:#1f252e;
+    --border:#2a303b;
+    --border-soft:#232935;
+    --text:#e9ecef;
+    --muted:#838c99;
+    --muted-2:#5c6472;
+    --accent:#e3a542;
+    --accent-soft:#3a2f1c;
+    --danger:#d9695f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+  header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  h1{
+    font-size:22px;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .sub{
+    color:var(--muted);
+    font-size:14px;
+    margin:0 0 32px;
+    line-height:1.5;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:36px;
+  }
+  .card h2{
+    font-size:14px;
+    font-weight:600;
+    margin:0 0 18px;
+    color:var(--text);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px 16px;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .field.full{ grid-column:1 / -1; }
+  label{
+    font-size:12px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  input, textarea{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:6px;
+    padding:9px 10px;
+    font-size:14px;
+    font-family:'IBM Plex Sans', sans-serif;
+    outline:none;
+    transition:border-color .15s;
+  }
+  input:focus, textarea:focus{
+    border-color:var(--accent);
+  }
+  input::placeholder, textarea::placeholder{
+    color:var(--muted-2);
+  }
+  textarea{ resize:vertical; min-height:56px; font-family:'IBM Plex Sans', sans-serif; }
+  .err{
+    font-size:12px;
+    color:var(--danger);
+    min-height:14px;
+  }
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:18px;
+  }
+  button{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    border-radius:6px;
+    border:1px solid transparent;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#3a2704;
+    padding:10px 18px;
+    border:none;
+  }
+  .btn-primary:hover{ background:#efb055; }
+  .btn-primary:active{ transform:scale(0.98); }
+  .status{
+    font-size:13px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .status.ok{ color:#8bbf7a; }
+
+  .log-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+    gap:12px;
+  }
+  .log-head h2{
+    font-size:14px;
+    font-weight:600;
+    margin:0;
+  }
+  .search{
+    background:var(--panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:6px;
+    padding:7px 10px;
+    font-size:13px;
+    width:200px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .search:focus{ outline:none; border-color:var(--accent); }
+
+  .log{
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:1fr 0.9fr 0.9fr 1fr 1.4fr;
+    gap:10px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border-soft);
+    align-items:start;
+    background:var(--panel);
+  }
+  .row:last-child{ border-bottom:none; }
+  .row.head-row{
+    background:var(--panel-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--muted);
+    padding:10px 16px;
+  }
+  .cell{
+    font-size:13px;
+    line-height:1.4;
+    overflow-wrap:break-word;
+  }
+  .cell.oem{ font-weight:500; }
+  .cell.reason{ color:var(--muted);}
+  .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--muted-2);
+    margin-top:4px;
+  }
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:2px 7px;
+    border-radius:4px;
+  }
+  .empty{
+    padding:40px 16px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    background:var(--panel);
+  }
+  .footer-note{
+    margin-top:14px;
+    font-size:12px;
+    color:var(--muted-2);
+    line-height:1.5;
+  }
+  @media (max-width:600px){
+    .grid{ grid-template-columns:1fr; }
+    .row{ grid-template-columns:1fr; gap:4px; }
+    .row.head-row{ display:none; }
+    .cell::before{
+      content: attr(data-label);
+      display:block;
+      font-family:'IBM Plex Mono', monospace;
+      font-size:10px;
+      color:var(--muted-2);
+      margin-bottom:2px;
+    }
+    .search{ width:130px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Ad unit log</h1>
+    <span class="count" id="count">0 entries</span>
+  </header>
+  <div style="margin:0 0 6px;">
+    <button id="notify-toggle" style="background:none;border:none;padding:0;color:var(--muted);font-size:12px;font-family:'IBM Plex Mono', monospace;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">Notification settings</button>
+  </div>
+  <div class="card" id="notify-panel" style="display:none;padding:18px 24px;">
+    <h2 style="margin-bottom:10px;">Teams notifications</h2>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 14px;">
+      Paste a Microsoft Teams webhook URL — from a channel's Incoming Webhook connector, or a Workflow that posts to a personal chat. Everyone who opens this link shares the same webhook, so any new entry — from anyone — triggers the notification.
+    </p>
+    <div class="field">
+      <label for="webhook">Teams webhook URL</label>
+      <input id="webhook" placeholder="https://xxx.webhook.office.com/webhookb2/...">
+    </div>
+    <div class="actions">
+      <button class="btn-primary" id="webhook-save" style="padding:8px 14px;">Save</button>
+      <button id="webhook-test" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border);padding:8px 14px;">Send test</button>
+      <span class="status" id="webhook-status"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>New entry</h2>
+    <div class="grid">
+      <div class="field">
+        <label for="oem">OEM name</label>
+        <input id="oem" list="oem-opts" placeholder="Select or type an OEM...">
+        <datalist id="oem-opts">
+          <option value="Default">
+          <option value="Xiaomi">
+          <option value="XiaomiGo">
+          <option value="Samsung">
+          <option value="Oppo">
+          <option value="OppoGSN">
+          <option value="Transsion">
+          <option value="Vivo">
+          <option value="VivoVSF">
+          <option value="MotorolaAOSP">
+          <option value="MotorolaGo">
+          <option value="Jio">
+          <option value="SoftbankXiaomi">
+          <option value="SoftbankMotorola">
+          <option value="SoftBankSharp">
+          <option value="SoftbankSony">
+          <option value="SoftbankOppo">
+          <option value="SoftbankZTE">
+          <option value="RealmeColorOS">
+          <option value="RealmeAOSP">
+          <option value="RealmeGo">
+          <option value="TracfoneMoto">
+          <option value="tracfportal">
+          <option value="SoftbankFCNT">
+          <option value="SamsungLSS">
+          <option value="Maosp">
+          <option value="Blu">
+          <option value="MaospVerizonPost">
+          <option value="MaospVerizonPre">
+          <option value="SwishmeMoto">
+          <option value="Tracfone">
+          <option value="SwishmeTracfoneMoto">
+          <option value="SamsungRetail">
+          <option value="TMobile">
+          <option value="RetailSharp">
+          <option value="SamsungVerizonPre">
+          <option value="SamsungVerizonPost">
+          <option value="Expressions_Samsung_Softbank">
+          <option value="Expressions_TCL_Verizon">
+          <option value="Expressions_TCL_Tracfone">
+          <option value="Expressions_Moto_Tracfone">
+          <option value="Expressions_Moto_Verizon">
+          <option value="Expressions_Moto_Retail">
+          <option value="Expressions_Folder_Tracfone">
+          <option value="Expressions_Folder_VZ_Post">
+          <option value="Expressions_Portal_Tracfone">
+          <option value="Expressions_Portal_VZ_Post">
+          <option value="AMVL">
+          <option value="Expressions_Samsung_Homescreen">
+          <option value="Expressions_Samsung_Vz_Pre_Homescreen">
+          <option value="Expressions_Samsung_Vz_Post_Homescreen">
+          <option value="Expressions_Folder_Samsung_Homescreen">
+          <option value="Expressions_Folder_Non-Samsung_Homescreen">
+          <option value="Expressions_Folder_Retail_Homescreen">
+          <option value="Expressions_Portal_TracFone_Homescreen">
+          <option value="Expressions_Portal_Retail_Homescreen">
+          <option value="Expressions_Portal_Vz_Homescreen">
+          <option value="Expressions_1W_Samsung_Vz">
+          <option value="Expressions_1W_Samsung_TF">
+          <option value="Expressions_1W_Non-Samsung_Vz">
+          <option value="Expressions_1W_Non-Samsung_TF">
+          <option value="Expressions_1W_Default">
+          <option value="Spaces_TracFoneMoto_Homescreen">
+          <option value="Spaces_MotoVerizonPre_Homescreen">
+          <option value="Spaces_MotoVerizonPost_Homescreen">
+          <option value="Spaces_Maosp_Homescreen">
+          <option value="Expressions_Samsung_Non-Softbank">
+          <option value="Expressions_Motorola_HSW">
+        </datalist>        <div class="err" id="err-oem"></div>
+      </div>
+      <div class="field">
+        <label for="surface">Real Estate</label>
+        <input id="surface" list="surface-opts" placeholder="LP, L1, GC, Tabs, Homescreen...">
+        <datalist id="surface-opts">
+          <option value="LP">
+          <option value="L1">
+          <option value="GC">
+          <option value="Tabs">
+          <option value="Homescreen">
+        </datalist>
+        <div class="err" id="err-surface"></div>
+      </div>
+      <div class="field">
+        <label for="format">Format</label>
+        <input id="format" list="format-opts" placeholder="Static banner, native, video...">
+        <datalist id="format-opts">
+          <option value="MREC">
+          <option value="Small_Banner">
+          <option value="Interstitial">
+          <option value="FSN">
+          <option value="Interscroller">
+        </datalist>
+        <div class="err" id="err-format"></div>
+      </div>
+      <div class="field">
+        <label for="purpose">Purpose</label>
+        <input id="purpose" list="purpose-opts" placeholder="OEM onboarding, refresh...">
+        <datalist id="purpose-opts">
+          <option value="OEM onboarding">
+          <option value="Publisher onboarding">
+          <option value="Backup ad units">
+          <option value="Refresh ad units">
+        </datalist>
+        <div class="err" id="err-purpose"></div>
+      </div>
+      <div class="field">
+        <label for="by">Requested by</label>
+        <input id="by" placeholder="Your name">
+      </div>
+      <div class="field full">
+        <label for="reason">Reason for creating (optional)</label>
+        <textarea id="reason" placeholder="e.g. new OEM launch partner, refresh of underperforming unit, seasonal campaign..."></textarea>
+        <div class="err" id="err-reason"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" id="submit">Add entry</button>
+      <span class="status" id="status"></span>
+    </div>
+  </div>
+
+  <div class="log-head">
+    <h2>History</h2>
+    <input class="search" id="search" placeholder="Filter by OEM, real estate, purpose...">
+  </div>
+  <div class="log" id="log">
+    <div class="row head-row">
+      <div>OEM</div>
+      <div>Real Estate</div>
+      <div>Format</div>
+      <div>Purpose</div>
+      <div>Reason</div>
+    </div>
+    <div class="empty" id="loading">Loading entries...</div>
+  </div>
+
+</div>
+
+<script>
+const STORE_KEY = 'entries';
+const WEBHOOK_KEY = 'teams_webhook';
+let allEntries = [];
+let webhookUrl = '';
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) + ' · ' +
+         d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+}
+
+async function loadEntries(){
+  const logEl = document.getElementById('log');
+  try{
+    const res = await window.storage.get(STORE_KEY, true);
+    allEntries = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){
+    allEntries = [];
+  }
+  render();
+}
+
+async function saveEntries(){
+  await window.storage.set(STORE_KEY, JSON.stringify(allEntries), true);
+}
+
+function render(){
+  const logEl = document.getElementById('log');
+  const filter = document.getElementById('search').value.trim().toLowerCase();
+  const countEl = document.getElementById('count');
+
+  const filtered = filter
+    ? allEntries.filter(e =>
+        [e.oem, e.surface, e.format, e.purpose, e.reason].some(v => (v||'').toLowerCase().includes(filter))
+      )
+    : allEntries;
+
+  countEl.textContent = allEntries.length + (allEntries.length === 1 ? ' entry' : ' entries');
+
+  const rows = [document.querySelector('.row.head-row').outerHTML];
+
+  if(filtered.length === 0){
+    rows.push(`<div class="empty">${allEntries.length === 0 ? 'No ad units logged yet. Add the first one above.' : 'Nothing matches that filter.'}</div>`);
+  } else {
+    filtered.slice().reverse().forEach(e => {
+      rows.push(`
+        <div class="row" data-id="${e.id}">
+          <div class="cell oem" data-label="OEM">${escapeHtml(e.oem)}</div>
+          <div class="cell" data-label="Real Estate"><span class="tag">${escapeHtml(e.surface)}</span></div>
+          <div class="cell" data-label="Format">${escapeHtml(e.format)}</div>
+          <div class="cell" data-label="Purpose"><span class="tag">${escapeHtml(e.purpose || '')}</span></div>
+          <div class="cell reason" data-label="Reason">
+            ${e.reason ? escapeHtml(e.reason) : '<span style="color:var(--muted-2);">—</span>'}
+            <div class="meta">${fmtDate(e.ts)}${e.by ? ' · ' + escapeHtml(e.by) : ''}</div>
+          </div>
+        </div>
+      `);
+    });
+  }
+
+  logEl.innerHTML = rows.join('');
+}
+
+function setError(id, msg){
+  document.getElementById('err-' + id).textContent = msg;
+}
+
+async function submitEntry(){
+  const oem = document.getElementById('oem').value.trim();
+  const surface = document.getElementById('surface').value.trim();
+  const format = document.getElementById('format').value.trim();
+  const purpose = document.getElementById('purpose').value.trim();
+  const reason = document.getElementById('reason').value.trim();
+  const by = document.getElementById('by').value.trim();
+  const statusEl = document.getElementById('status');
+
+  let valid = true;
+  setError('oem',''); setError('surface',''); setError('format',''); setError('purpose',''); setError('reason','');
+
+  if(!oem){ setError('oem','Enter an OEM name'); valid = false; }
+  if(!surface){ setError('surface','Enter a real estate'); valid = false; }
+  if(!format){ setError('format','Enter a format'); valid = false; }
+  if(!purpose){ setError('purpose','Enter a purpose'); valid = false; }
+  if(!valid) return;
+
+  const entry = {
+    id: Date.now() + '-' + Math.random().toString(36).slice(2,8),
+    oem, surface, format, purpose, reason, by,
+    ts: Date.now()
+  };
+
+  const submitBtn = document.getElementById('submit');
+  submitBtn.disabled = true;
+  statusEl.textContent = 'Saving...';
+  statusEl.className = 'status';
+
+  try{
+    allEntries.push(entry);
+    await saveEntries();
+    notifyTeams(entry);
+    document.getElementById('oem').value = '';
+    document.getElementById('surface').value = '';
+    document.getElementById('format').value = '';
+    document.getElementById('purpose').value = '';
+    document.getElementById('reason').value = '';
+    document.getElementById('by').value = '';
+    statusEl.textContent = 'Entry added';
+    statusEl.className = 'status ok';
+    render();
+    setTimeout(() => { statusEl.textContent = ''; }, 2500);
+  }catch(e){
+    allEntries.pop();
+    statusEl.textContent = 'Failed to save — try again';
+    statusEl.className = 'status';
+  }
+  submitBtn.disabled = false;
+}
+
+document.getElementById('submit').addEventListener('click', submitEntry);
+document.getElementById('search').addEventListener('input', render);
+document.querySelectorAll('#oem,#surface,#format,#purpose,#by').forEach(el=>{
+  el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitEntry(); });
+});
+
+async function loadWebhook(){
+  try{
+    const res = await window.storage.get(WEBHOOK_KEY, true);
+    webhookUrl = res && res.value ? res.value : '';
+  }catch(e){
+    webhookUrl = '';
+  }
+  document.getElementById('webhook').value = webhookUrl;
+}
+
+async function notifyTeams(entry){
+  if(!webhookUrl) return;
+  const summaryText = `New ad unit logged\n\nOEM: ${entry.oem}\nReal estate: ${entry.surface}\nFormat: ${entry.format}\nPurpose: ${entry.purpose || ''}${entry.reason ? '\nReason: ' + entry.reason : ''}${entry.by ? '\nRequested by: ' + entry.by : ''}`;
+  const card = {
+    '@type': 'MessageCard',
+    '@context': 'http://schema.org/extensions',
+    summary: 'New ad unit created',
+    themeColor: 'E3A542',
+    title: 'New ad unit logged',
+    text: `**OEM:** ${entry.oem}\n\n**Real estate:** ${entry.surface}\n\n**Format:** ${entry.format}\n\n**Purpose:** ${entry.purpose || ''}${entry.reason ? '\n\n**Reason:** ' + entry.reason : ''}${entry.by ? '\n\n**Requested by:** ' + entry.by : ''}`,
+    text_plain: summaryText,
+    oem: entry.oem,
+    surface: entry.surface,
+    format: entry.format,
+    purpose: entry.purpose || '',
+    reason: entry.reason,
+    requestedBy: entry.by || '',
+    timestamp: new Date(entry.ts).toISOString()
+  };
+  try{
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(card)
+    });
+  }catch(e){
+    try{
+      await fetch(webhookUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(card)
+      });
+    }catch(e2){ /* silent — don't block the save on a notify failure */ }
+  }
+}
+
+document.getElementById('notify-toggle').addEventListener('click', () => {
+  const panel = document.getElementById('notify-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+});
+
+document.getElementById('webhook-save').addEventListener('click', async () => {
+  const val = document.getElementById('webhook').value.trim();
+  const statusEl = document.getElementById('webhook-status');
+  webhookUrl = val;
+  await window.storage.set(WEBHOOK_KEY, val, true);
+  statusEl.textContent = 'Saved';
+  statusEl.className = 'status ok';
+  setTimeout(() => { statusEl.textContent = ''; }, 2000);
+});
+
+document.getElementById('webhook-test').addEventListener('click', async () => {
+  const statusEl = document.getElementById('webhook-status');
+  const val = document.getElementById('webhook').value.trim();
+  if(!val){ statusEl.textContent = 'Enter a webhook URL first'; statusEl.className = 'status'; return; }
+  webhookUrl = val;
+  statusEl.textContent = 'Sending test...';
+  statusEl.className = 'status';
+  await notifyTeams({oem:'Test OEM', surface:'LP', format:'MREC', purpose:'Refresh ad units', reason:'This is a test notification.', by:'Test', ts: Date.now()});
+  statusEl.textContent = 'Test sent — check Teams';
+  statusEl.className = 'status ok';
+  setTimeout(() => { statusEl.textContent = ''; }, 3000);
+});
+
+loadWebhook();
+loadEntries();
+</script>
+</body>
+</html>
