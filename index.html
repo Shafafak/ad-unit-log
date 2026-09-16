@@ -6,28 +6,32 @@
 <title>Ad unit log</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0f1218;
-    --bg-glow: radial-gradient(circle at 20% -10%, rgba(227,165,66,0.16), transparent 45%),
-               radial-gradient(circle at 90% 0%, rgba(76,120,255,0.10), transparent 40%);
-    --panel:#1a1f28;
-    --panel-2:#212734;
-    --border:#2d3441;
-    --border-soft:#252b37;
-    --text:#f1f3f6;
-    --muted:#93a0b3;
-    --muted-2:#616d80;
-    --accent:#e3a542;
-    --accent-2:#f4c76b;
-    --accent-soft:#3d2f18;
-    --blue:#6ea8fe;
-    --blue-soft:#1b2740;
-    --green:#7bc696;
-    --green-soft:#173225;
+    --bg:#020203;
+    --bg-glow: radial-gradient(circle at 15% -10%, rgba(139,92,246,0.07), transparent 45%),
+               radial-gradient(circle at 90% 0%, rgba(96,165,250,0.05), transparent 40%);
+    --panel:#0a0b10;
+    --panel-2:#0e0f16;
+    --border:rgba(255,255,255,0.06);
+    --border-soft:rgba(255,255,255,0.04);
+    --text:#f5f6f8;
+    --muted:#8b93a7;
+    --muted-2:#5b6376;
+    --accent:#f0a83c;
+    --accent-2:#f6c274;
+    --accent-soft:#3d2a15;
+    --blue:#60a5fa;
+    --blue-soft:#16233d;
+    --green:#34d399;
+    --green-soft:#133327;
+    --purple:#a78bfa;
+    --purple-soft:#241a3d;
+    --pink:#fb7185;
+    --pink-soft:#3d1626;
     --danger:#ef7a6d;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px -12px rgba(0,0,0,0.55);
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -12px rgba(0,0,0,0.6);
   }
   *{box-sizing:border-box;}
   body{
@@ -35,7 +39,7 @@
     background:var(--bg) var(--bg-glow);
     background-attachment:fixed;
     color:var(--text);
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{
@@ -50,22 +54,19 @@
     margin-bottom:4px;
   }
   h1{
-    font-size:30px;
-    font-weight:600;
+    font-size:28px;
+    font-weight:700;
     margin:0;
     letter-spacing:-0.02em;
-    background:linear-gradient(90deg, var(--text), var(--accent-2));
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
+    color:var(--text);
   }
   .count{
     font-family:'IBM Plex Mono', monospace;
-    font-size:14px;
+    font-size:13.5px;
     color:var(--muted);
     background:var(--panel);
     border:1px solid var(--border);
-    padding:6px 12px;
+    padding:6px 14px;
     border-radius:999px;
   }
   .sub{
@@ -78,6 +79,14 @@
     background:linear-gradient(180deg, var(--panel), var(--panel-2) 140%);
     border:1px solid var(--border);
     border-radius:18px;
+    padding:32px;
+    margin-bottom:40px;
+    box-shadow:var(--shadow);
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
     padding:32px;
     margin-bottom:40px;
     box-shadow:var(--shadow);
@@ -100,10 +109,12 @@
   }
   .field.full{ grid-column:1 / -1; }
   label{
-    font-size:12.5px;
+    font-size:11px;
     color:var(--muted);
-    font-family:'IBM Plex Mono', monospace;
-    letter-spacing:0.02em;
+    font-family:'Inter', sans-serif;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:600;
   }
   input, textarea{
     background:var(--panel-2);
@@ -112,18 +123,18 @@
     border-radius:10px;
     padding:13px 14px;
     font-size:15px;
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     outline:none;
     transition:border-color .15s, box-shadow .15s;
   }
   input:focus, textarea:focus{
     border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(227,165,66,0.18);
+    box-shadow:0 0 0 3px rgba(240,168,60,0.18);
   }
   input::placeholder, textarea::placeholder{
     color:var(--muted-2);
   }
-  textarea{ resize:vertical; min-height:64px; font-family:'IBM Plex Sans', sans-serif; }
+  textarea{ resize:vertical; min-height:64px; font-family:'Inter', sans-serif; }
   .err{
     font-size:12.5px;
     color:var(--danger);
@@ -136,7 +147,7 @@
     margin-top:26px;
   }
   button{
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'Inter', sans-serif;
     font-size:15px;
     font-weight:600;
     cursor:pointer;
@@ -145,13 +156,12 @@
     transition:transform .1s, filter .15s, background .15s;
   }
   .btn-primary{
-    background:linear-gradient(180deg, var(--accent-2), var(--accent));
-    color:#3a2704;
+    background:var(--accent);
+    color:#241505;
     padding:14px 28px;
     border:none;
-    box-shadow:0 6px 18px -6px rgba(227,165,66,0.55);
   }
-  .btn-primary:hover{ filter:brightness(1.06); }
+  .btn-primary:hover{ filter:brightness(1.08); }
   .btn-primary:active{ transform:scale(0.97); }
   .status{
     font-size:13.5px;
@@ -172,6 +182,7 @@
     font-weight:600;
     margin:0;
     letter-spacing:-0.01em;
+    color:var(--text);
   }
   .search{
     background:var(--panel);
@@ -184,7 +195,7 @@
     font-family:'IBM Plex Mono', monospace;
     transition:border-color .15s, box-shadow .15s;
   }
-  .search:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(227,165,66,0.18); }
+  .search:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(240,168,60,0.18); }
 
   .log{
     border:1px solid var(--border);
@@ -206,11 +217,13 @@
   .row:last-child{ border-bottom:none; }
   .row.head-row{
     background:var(--panel-2);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
+    font-family:'Inter', sans-serif;
+    font-size:11px;
+    font-weight:600;
     color:var(--muted);
     padding:14px 22px;
-    letter-spacing:0.03em;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
   }
   .row.head-row:hover{ background:var(--panel-2); }
   .cell{
@@ -228,16 +241,17 @@
   }
   .tag{
     display:inline-block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    font-weight:500;
-    color:var(--accent-2);
+    font-family:'Inter', sans-serif;
+    font-size:12px;
+    font-weight:600;
+    color:var(--accent);
     background:var(--accent-soft);
     padding:4px 10px;
     border-radius:6px;
   }
   .tag.blue{ color:var(--blue); background:var(--blue-soft); }
   .tag.green{ color:var(--green); background:var(--green-soft); }
+  .tag.purple{ color:var(--purple); background:var(--purple-soft); }
   .empty{
     padding:56px 16px;
     text-align:center;
@@ -260,6 +274,83 @@
     .search{ width:150px; }
     h1{ font-size:24px; }
   }
+  .ms{
+    position:relative;
+  }
+  .ms-trigger{
+    width:100%;
+    text-align:left;
+    background:var(--panel-2);
+    border:1.5px solid var(--border);
+    color:var(--muted-2);
+    border-radius:10px;
+    padding:13px 14px;
+    font-size:15px;
+    font-family:'Inter', sans-serif;
+    font-weight:400;
+  }
+  .ms-trigger.has-value{ color:var(--text); }
+  .ms-trigger:hover{ border-color:var(--muted-2); }
+  .ms-panel{
+    display:none;
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+    right:0;
+    background:var(--panel-2);
+    border:1.5px solid var(--border);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    padding:10px;
+    z-index:20;
+    max-height:280px;
+    overflow-y:auto;
+  }
+  .ms-panel.open{ display:block; }
+  .ms-option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 8px;
+    border-radius:7px;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .ms-option:hover{ background:var(--panel); }
+  .ms-option input[type=checkbox]{
+    width:16px;
+    height:16px;
+    accent-color:var(--accent);
+    flex-shrink:0;
+  }
+  .ms-all{
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:6px;
+    padding-bottom:10px;
+    font-weight:600;
+  }
+  .ms-add{
+    margin-bottom:8px;
+  }
+  .ms-add-input{
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:8px;
+    padding:9px 10px;
+    font-size:13.5px;
+    font-family:'Inter', sans-serif;
+    outline:none;
+  }
+  .ms-add-input:focus{ border-color:var(--accent); }
+  .ms-empty{
+    font-size:12.5px;
+    color:var(--muted-2);
+    padding:8px 8px 2px;
+    font-style:italic;
+  }
+  #notify-toggle:hover{ opacity:1; }
 </style>
 </head>
 <body>
@@ -269,9 +360,6 @@
     <h1>Ad unit log</h1>
     <span class="count" id="count">0 entries</span>
   </header>
-  <div style="margin:8px 0 28px;">
-    <button id="notify-toggle" style="background:var(--panel);border:1px solid var(--border);padding:8px 16px;border-radius:999px;color:var(--muted);font-size:13px;font-family:'IBM Plex Mono', monospace;cursor:pointer;">⚙ Notification settings</button>
-  </div>
   <div class="card" id="notify-panel" style="display:none;">
     <h2>Teams notifications</h2>
     <p style="font-size:14px;color:var(--muted);line-height:1.6;margin:-10px 0 20px;">
@@ -292,101 +380,42 @@
     <h2>New entry</h2>
     <div class="grid">
       <div class="field">
-        <label for="oem">OEM name</label>
-        <input id="oem" list="oem-opts" placeholder="Select or type an OEM...">
-        <datalist id="oem-opts">
-          <option value="Default">
-          <option value="Xiaomi">
-          <option value="XiaomiGo">
-          <option value="Samsung">
-          <option value="Oppo">
-          <option value="OppoGSN">
-          <option value="Transsion">
-          <option value="Vivo">
-          <option value="VivoVSF">
-          <option value="MotorolaAOSP">
-          <option value="MotorolaGo">
-          <option value="Jio">
-          <option value="SoftbankXiaomi">
-          <option value="SoftbankMotorola">
-          <option value="SoftBankSharp">
-          <option value="SoftbankSony">
-          <option value="SoftbankOppo">
-          <option value="SoftbankZTE">
-          <option value="RealmeColorOS">
-          <option value="RealmeAOSP">
-          <option value="RealmeGo">
-          <option value="TracfoneMoto">
-          <option value="tracfportal">
-          <option value="SoftbankFCNT">
-          <option value="SamsungLSS">
-          <option value="Maosp">
-          <option value="Blu">
-          <option value="MaospVerizonPost">
-          <option value="MaospVerizonPre">
-          <option value="SwishmeMoto">
-          <option value="Tracfone">
-          <option value="SwishmeTracfoneMoto">
-          <option value="SamsungRetail">
-          <option value="TMobile">
-          <option value="RetailSharp">
-          <option value="SamsungVerizonPre">
-          <option value="SamsungVerizonPost">
-          <option value="Expressions_Samsung_Softbank">
-          <option value="Expressions_TCL_Verizon">
-          <option value="Expressions_TCL_Tracfone">
-          <option value="Expressions_Moto_Tracfone">
-          <option value="Expressions_Moto_Verizon">
-          <option value="Expressions_Moto_Retail">
-          <option value="Expressions_Folder_Tracfone">
-          <option value="Expressions_Folder_VZ_Post">
-          <option value="Expressions_Portal_Tracfone">
-          <option value="Expressions_Portal_VZ_Post">
-          <option value="AMVL">
-          <option value="Expressions_Samsung_Homescreen">
-          <option value="Expressions_Samsung_Vz_Pre_Homescreen">
-          <option value="Expressions_Samsung_Vz_Post_Homescreen">
-          <option value="Expressions_Folder_Samsung_Homescreen">
-          <option value="Expressions_Folder_Non-Samsung_Homescreen">
-          <option value="Expressions_Folder_Retail_Homescreen">
-          <option value="Expressions_Portal_TracFone_Homescreen">
-          <option value="Expressions_Portal_Retail_Homescreen">
-          <option value="Expressions_Portal_Vz_Homescreen">
-          <option value="Expressions_1W_Samsung_Vz">
-          <option value="Expressions_1W_Samsung_TF">
-          <option value="Expressions_1W_Non-Samsung_Vz">
-          <option value="Expressions_1W_Non-Samsung_TF">
-          <option value="Expressions_1W_Default">
-          <option value="Spaces_TracFoneMoto_Homescreen">
-          <option value="Spaces_MotoVerizonPre_Homescreen">
-          <option value="Spaces_MotoVerizonPost_Homescreen">
-          <option value="Spaces_Maosp_Homescreen">
-          <option value="Expressions_Samsung_Non-Softbank">
-          <option value="Expressions_Motorola_HSW">
-        </datalist>        <div class="err" id="err-oem"></div>
+        <label>OEM name</label>
+        <div class="ms" data-field="oem">
+          <button type="button" class="ms-trigger">Select OEM(s)...</button>
+          <div class="ms-panel">
+            <div class="ms-add"><input type="text" class="ms-add-input" placeholder="Search or type to add..."></div>
+            <label class="ms-option ms-all"><input type="checkbox" class="ms-all-cb"> All</label>
+            <div class="ms-list"></div>
+            <div class="ms-empty" style="display:none;">No match — press Enter to add it</div>
+          </div>
+        </div>
+        <div class="err" id="err-oem"></div>
       </div>
       <div class="field">
-        <label for="surface">Real Estate</label>
-        <input id="surface" list="surface-opts" placeholder="LP, L1, GC, Tabs, Homescreen...">
-        <datalist id="surface-opts">
-          <option value="LP">
-          <option value="L1">
-          <option value="GC">
-          <option value="Tabs">
-          <option value="Homescreen">
-        </datalist>
+        <label>Real Estate</label>
+        <div class="ms" data-field="surface">
+          <button type="button" class="ms-trigger">Select real estate...</button>
+          <div class="ms-panel">
+            <div class="ms-add"><input type="text" class="ms-add-input" placeholder="Search or type to add..."></div>
+            <label class="ms-option ms-all"><input type="checkbox" class="ms-all-cb"> All</label>
+            <div class="ms-list"></div>
+            <div class="ms-empty" style="display:none;">No match — press Enter to add it</div>
+          </div>
+        </div>
         <div class="err" id="err-surface"></div>
       </div>
       <div class="field">
-        <label for="format">Format</label>
-        <input id="format" list="format-opts" placeholder="Static banner, native, video...">
-        <datalist id="format-opts">
-          <option value="MREC">
-          <option value="Small_Banner">
-          <option value="Interstitial">
-          <option value="FSN">
-          <option value="Interscroller">
-        </datalist>
+        <label>Format</label>
+        <div class="ms" data-field="format">
+          <button type="button" class="ms-trigger">Select format(s)...</button>
+          <div class="ms-panel">
+            <div class="ms-add"><input type="text" class="ms-add-input" placeholder="Search or type to add..."></div>
+            <label class="ms-option ms-all"><input type="checkbox" class="ms-all-cb"> All</label>
+            <div class="ms-list"></div>
+            <div class="ms-empty" style="display:none;">No match — press Enter to add it</div>
+          </div>
+        </div>
         <div class="err" id="err-format"></div>
       </div>
       <div class="field">
@@ -431,12 +460,29 @@
     <div class="empty" id="loading">Loading entries...</div>
   </div>
 
+  <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+    <button id="notify-toggle" title="Notification settings" style="background:none;border:none;padding:6px;color:var(--muted-2);font-size:15px;cursor:pointer;opacity:0.55;">⚙</button>
+  </div>
+
 </div>
 
 <script>
 const FIREBASE_URL = 'https://ad-unit-log-default-rtdb.firebaseio.com/';
 let allEntries = [];
 let webhookUrl = '';
+
+const MS_OPTIONS = {
+  oem: ['Default','Xiaomi','XiaomiGo','Samsung','Oppo','OppoGSN','Transsion','Vivo','VivoVSF','MotorolaAOSP','MotorolaGo','Jio','SoftbankXiaomi','SoftbankMotorola','SoftBankSharp','SoftbankSony','SoftbankOppo','SoftbankZTE','RealmeColorOS','RealmeAOSP','RealmeGo','TracfoneMoto','tracfportal','SoftbankFCNT','SamsungLSS','Maosp','Blu','MaospVerizonPost','MaospVerizonPre','SwishmeMoto','Tracfone','SwishmeTracfoneMoto','SamsungRetail','TMobile','RetailSharp','SamsungVerizonPre','SamsungVerizonPost','Expressions_Samsung_Softbank','Expressions_TCL_Verizon','Expressions_TCL_Tracfone','Expressions_Moto_Tracfone','Expressions_Moto_Verizon','Expressions_Moto_Retail','Expressions_Folder_Tracfone','Expressions_Folder_VZ_Post','Expressions_Portal_Tracfone','Expressions_Portal_VZ_Post','AMVL','Expressions_Samsung_Homescreen','Expressions_Samsung_Vz_Pre_Homescreen','Expressions_Samsung_Vz_Post_Homescreen','Expressions_Folder_Samsung_Homescreen','Expressions_Folder_Non-Samsung_Homescreen','Expressions_Folder_Retail_Homescreen','Expressions_Portal_TracFone_Homescreen','Expressions_Portal_Retail_Homescreen','Expressions_Portal_Vz_Homescreen','Expressions_1W_Samsung_Vz','Expressions_1W_Samsung_TF','Expressions_1W_Non-Samsung_Vz','Expressions_1W_Non-Samsung_TF','Expressions_1W_Default','Spaces_TracFoneMoto_Homescreen','Spaces_MotoVerizonPre_Homescreen','Spaces_MotoVerizonPost_Homescreen','Spaces_Maosp_Homescreen','Expressions_Samsung_Non-Softbank','Expressions_Motorola_HSW'],
+  surface: ['LP','L1','GC','Tabs','Homescreen'],
+  format: ['MREC','Small_Banner','Interstitial','FSN','Interscroller']
+};
+
+const msSelections = { oem: [], surface: [], format: [] };
+
+function formatList(v){
+  if(Array.isArray(v)) return v.join(', ');
+  return v || '';
+}
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -447,6 +493,147 @@ function fmtDate(ts){
   return d.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) + ' · ' +
          d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
 }
+
+function msPlaceholder(field){
+  return { oem: 'Select OEM(s)...', surface: 'Select real estate...', format: 'Select format(s)...' }[field];
+}
+
+function msUpdateTrigger(field){
+  const container = document.querySelector(`.ms[data-field="${field}"]`);
+  const trigger = container.querySelector('.ms-trigger');
+  const sel = msSelections[field];
+  if(sel.length === 0){
+    trigger.textContent = msPlaceholder(field);
+    trigger.classList.remove('has-value');
+  } else {
+    trigger.textContent = sel.join(', ');
+    trigger.classList.add('has-value');
+  }
+}
+
+function msSyncFromCheckboxes(field){
+  const container = document.querySelector(`.ms[data-field="${field}"]`);
+  const list = container.querySelector('.ms-list');
+  const checked = Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value);
+  msSelections[field] = checked;
+  if(checked.length > 0){
+    container.querySelector('.ms-all-cb').checked = false;
+  }
+  msUpdateTrigger(field);
+}
+
+function msAddCustomOption(field, val){
+  const container = document.querySelector(`.ms[data-field="${field}"]`);
+  const list = container.querySelector('.ms-list');
+  const existing = Array.from(list.querySelectorAll('input[type=checkbox]'));
+  const match = existing.find(cb => cb.value.toLowerCase() === val.toLowerCase());
+  if(match){
+    match.checked = true;
+  } else {
+    const lbl = document.createElement('label');
+    lbl.className = 'ms-option';
+    lbl.innerHTML = `<input type="checkbox" value="${escapeHtml(val)}" checked> ${escapeHtml(val)}`;
+    list.appendChild(lbl);
+  }
+  container.querySelector('.ms-all-cb').checked = false;
+  container.querySelectorAll('.ms-list input[type=checkbox]').forEach(cb => { cb.disabled = false; });
+  msSyncFromCheckboxes(field);
+}
+
+function msReset(field){
+  msSelections[field] = [];
+  const container = document.querySelector(`.ms[data-field="${field}"]`);
+  container.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; cb.disabled = false; });
+  container.querySelectorAll('.ms-option').forEach(lbl => { lbl.style.display = ''; });
+  const addInput = container.querySelector('.ms-add-input');
+  if(addInput) addInput.value = '';
+  const emptyMsg = container.querySelector('.ms-empty');
+  if(emptyMsg) emptyMsg.style.display = 'none';
+  msUpdateTrigger(field);
+}
+
+function buildMultiSelect(field){
+  const container = document.querySelector(`.ms[data-field="${field}"]`);
+  const trigger = container.querySelector('.ms-trigger');
+  const panel = container.querySelector('.ms-panel');
+  const allCb = container.querySelector('.ms-all-cb');
+  const list = container.querySelector('.ms-list');
+  const addInput = container.querySelector('.ms-add-input');
+
+  MS_OPTIONS[field].forEach(opt => {
+    const lbl = document.createElement('label');
+    lbl.className = 'ms-option';
+    lbl.innerHTML = `<input type="checkbox" value="${escapeHtml(opt)}"> ${escapeHtml(opt)}`;
+    list.appendChild(lbl);
+  });
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.ms-panel.open').forEach(p => { if(p !== panel) p.classList.remove('open'); });
+    panel.classList.toggle('open');
+  });
+
+  allCb.addEventListener('change', () => {
+    if(allCb.checked){
+      msSelections[field] = ['All'];
+      list.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; cb.disabled = true; });
+    } else {
+      msSelections[field] = [];
+      list.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.disabled = false; });
+    }
+    msUpdateTrigger(field);
+  });
+
+  list.addEventListener('change', (e) => {
+    if(e.target.type !== 'checkbox') return;
+    msSyncFromCheckboxes(field);
+  });
+
+  addInput.addEventListener('click', (e) => e.stopPropagation());
+  addInput.addEventListener('input', () => {
+    const q = addInput.value.trim().toLowerCase();
+    const labels = Array.from(list.querySelectorAll('.ms-option'));
+    let anyVisible = false;
+    labels.forEach(lbl => {
+      const text = lbl.textContent.trim().toLowerCase();
+      const match = !q || text.includes(q);
+      lbl.style.display = match ? '' : 'none';
+      if(match) anyVisible = true;
+    });
+    const emptyMsg = container.querySelector('.ms-empty');
+    emptyMsg.style.display = (q && !anyVisible) ? 'block' : 'none';
+  });
+  addInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      const val = addInput.value.trim();
+      if(!val) return;
+      const exact = MS_OPTIONS[field].concat(
+        Array.from(list.querySelectorAll('input[type=checkbox]')).map(cb => cb.value)
+      ).find(o => o.toLowerCase() === val.toLowerCase());
+      if(exact){
+        const cb = Array.from(list.querySelectorAll('input[type=checkbox]')).find(c => c.value.toLowerCase() === val.toLowerCase());
+        if(cb) cb.checked = true;
+        msSyncFromCheckboxes(field);
+      } else {
+        msAddCustomOption(field, val);
+      }
+      addInput.value = '';
+      list.querySelectorAll('.ms-option').forEach(lbl => { lbl.style.display = ''; });
+      container.querySelector('.ms-empty').style.display = 'none';
+    }
+  });
+
+  msUpdateTrigger(field);
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.ms-panel.open').forEach(p => {
+    if(!p.closest('.ms').contains(e.target)) p.classList.remove('open');
+  });
+});
+
+['oem','surface','format'].forEach(buildMultiSelect);
 
 async function loadEntries(){
   try{
@@ -477,7 +664,7 @@ function render(){
 
   const filtered = filter
     ? allEntries.filter(e =>
-        [e.oem, e.surface, e.format, e.purpose, e.reason].some(v => (v||'').toLowerCase().includes(filter))
+        [formatList(e.oem), formatList(e.surface), formatList(e.format), e.purpose, e.reason].some(v => (v||'').toLowerCase().includes(filter))
       )
     : allEntries;
 
@@ -491,9 +678,9 @@ function render(){
     filtered.slice().reverse().forEach(e => {
       rows.push(`
         <div class="row" data-id="${e.id}">
-          <div class="cell oem" data-label="OEM">${escapeHtml(e.oem)}</div>
-          <div class="cell" data-label="Real Estate"><span class="tag blue">${escapeHtml(e.surface)}</span></div>
-          <div class="cell" data-label="Format">${escapeHtml(e.format)}</div>
+          <div class="cell oem" data-label="OEM">${escapeHtml(formatList(e.oem))}</div>
+          <div class="cell" data-label="Real Estate"><span class="tag blue">${escapeHtml(formatList(e.surface))}</span></div>
+          <div class="cell" data-label="Format"><span class="tag purple">${escapeHtml(formatList(e.format))}</span></div>
           <div class="cell" data-label="Purpose"><span class="tag green">${escapeHtml(e.purpose || '')}</span></div>
           <div class="cell reason" data-label="Reason">
             ${e.reason ? escapeHtml(e.reason) : '<span style="color:var(--muted-2);">—</span>'}
@@ -512,9 +699,9 @@ function setError(id, msg){
 }
 
 async function submitEntry(){
-  const oem = document.getElementById('oem').value.trim();
-  const surface = document.getElementById('surface').value.trim();
-  const format = document.getElementById('format').value.trim();
+  const oem = msSelections.oem.slice();
+  const surface = msSelections.surface.slice();
+  const format = msSelections.format.slice();
   const purpose = document.getElementById('purpose').value.trim();
   const reason = document.getElementById('reason').value.trim();
   const by = document.getElementById('by').value.trim();
@@ -523,9 +710,9 @@ async function submitEntry(){
   let valid = true;
   setError('oem',''); setError('surface',''); setError('format',''); setError('purpose',''); setError('reason','');
 
-  if(!oem){ setError('oem','Enter an OEM name'); valid = false; }
-  if(!surface){ setError('surface','Enter a real estate'); valid = false; }
-  if(!format){ setError('format','Enter a format'); valid = false; }
+  if(oem.length === 0){ setError('oem','Select at least one OEM'); valid = false; }
+  if(surface.length === 0){ setError('surface','Select at least one real estate'); valid = false; }
+  if(format.length === 0){ setError('format','Select at least one format'); valid = false; }
   if(!purpose){ setError('purpose','Enter a purpose'); valid = false; }
   if(!valid) return;
 
@@ -543,9 +730,9 @@ async function submitEntry(){
     const newId = await addEntryRemote(entry);
     allEntries.push({ id: newId, ...entry });
     notifyTeams(entry);
-    document.getElementById('oem').value = '';
-    document.getElementById('surface').value = '';
-    document.getElementById('format').value = '';
+    msReset('oem');
+    msReset('surface');
+    msReset('format');
     document.getElementById('purpose').value = '';
     document.getElementById('reason').value = '';
     document.getElementById('by').value = '';
@@ -562,7 +749,7 @@ async function submitEntry(){
 
 document.getElementById('submit').addEventListener('click', submitEntry);
 document.getElementById('search').addEventListener('input', render);
-document.querySelectorAll('#oem,#surface,#format,#purpose,#by').forEach(el=>{
+document.querySelectorAll('#purpose,#by').forEach(el=>{
   el.addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitEntry(); });
 });
 
@@ -581,9 +768,9 @@ async function notifyTeams(entry){
   if(!webhookUrl) return;
   const lines = [
     '🆕 New ad unit logged',
-    `OEM: ${entry.oem}`,
-    `Real estate: ${entry.surface}`,
-    `Format: ${entry.format}`,
+    `OEM: ${formatList(entry.oem)}`,
+    `Real estate: ${formatList(entry.surface)}`,
+    `Format: ${formatList(entry.format)}`,
     `Purpose: ${entry.purpose || ''}`
   ];
   if(entry.reason) lines.push(`Reason: ${entry.reason}`);
@@ -641,7 +828,7 @@ document.getElementById('webhook-test').addEventListener('click', async () => {
   webhookUrl = val;
   statusEl.textContent = 'Sending test...';
   statusEl.className = 'status';
-  await notifyTeams({oem:'Test OEM', surface:'LP', format:'MREC', purpose:'Refresh ad units', reason:'This is a test notification.', by:'Test', ts: Date.now()});
+  await notifyTeams({oem:['Test OEM'], surface:['LP'], format:['MREC'], purpose:'Refresh ad units', reason:'This is a test notification.', by:'Test', ts: Date.now()});
   statusEl.textContent = 'Test sent — check Teams';
   statusEl.className = 'status ok';
   setTimeout(() => { statusEl.textContent = ''; }, 3000);
