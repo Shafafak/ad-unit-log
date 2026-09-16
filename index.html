@@ -579,37 +579,24 @@ async function loadWebhook(){
 
 async function notifyTeams(entry){
   if(!webhookUrl) return;
-  const facts = [
-    { title: 'OEM', value: entry.oem },
-    { title: 'Real estate', value: entry.surface },
-    { title: 'Format', value: entry.format },
-    { title: 'Purpose', value: entry.purpose || '' }
+  const lines = [
+    '🆕 New ad unit logged',
+    `OEM: ${entry.oem}`,
+    `Real estate: ${entry.surface}`,
+    `Format: ${entry.format}`,
+    `Purpose: ${entry.purpose || ''}`
   ];
-  if(entry.reason) facts.push({ title: 'Reason', value: entry.reason });
-  if(entry.by) facts.push({ title: 'Requested by', value: entry.by });
+  if(entry.reason) lines.push(`Reason: ${entry.reason}`);
+  if(entry.by) lines.push(`Requested by: ${entry.by}`);
 
-  const card = {
-    type: 'message',
-    attachments: [
-      {
-        contentType: 'application/vnd.microsoft.card.adaptive',
-        content: {
-          type: 'AdaptiveCard',
-          '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
-          version: '1.4',
-          body: [
-            { type: 'TextBlock', text: 'New ad unit logged', weight: 'Bolder', size: 'Medium', color: 'Warning' },
-            { type: 'FactSet', facts: facts }
-          ]
-        }
-      }
-    ]
+  const payload = {
+    text: lines.join('\n')
   };
   try{
     await fetch(webhookUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(card)
+      body: JSON.stringify(payload)
     });
   }catch(e){
     try{
@@ -617,7 +604,7 @@ async function notifyTeams(entry){
         method: 'POST',
         mode: 'no-cors',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(card)
+        body: JSON.stringify(payload)
       });
     }catch(e2){ /* silent — don't block the save on a notify failure */ }
   }
