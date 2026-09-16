@@ -589,12 +589,20 @@ async function notifyTeams(entry){
   if(entry.by) facts.push({ title: 'Requested by', value: entry.by });
 
   const card = {
-    type: 'AdaptiveCard',
-    '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
-    version: '1.4',
-    body: [
-      { type: 'TextBlock', text: 'New ad unit logged', weight: 'Bolder', size: 'Medium', color: 'Warning' },
-      { type: 'FactSet', facts: facts }
+    type: 'message',
+    attachments: [
+      {
+        contentType: 'application/vnd.microsoft.card.adaptive',
+        content: {
+          type: 'AdaptiveCard',
+          '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+          version: '1.4',
+          body: [
+            { type: 'TextBlock', text: 'New ad unit logged', weight: 'Bolder', size: 'Medium', color: 'Warning' },
+            { type: 'FactSet', facts: facts }
+          ]
+        }
+      }
     ]
   };
   try{
