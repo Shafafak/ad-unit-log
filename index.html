@@ -434,8 +434,7 @@
 </div>
 
 <script>
-const STORE_KEY = 'entries';
-const WEBHOOK_KEY = 'teams_webhook';
+const FIREBASE_URL = 'https://ad-unit-log-default-rtdb.firebaseio.com/';
 let allEntries = [];
 let webhookUrl = '';
 
@@ -450,18 +449,25 @@ function fmtDate(ts){
 }
 
 async function loadEntries(){
-  const logEl = document.getElementById('log');
   try{
-    const res = await window.storage.get(STORE_KEY, true);
-    allEntries = res && res.value ? JSON.parse(res.value) : [];
+    const res = await fetch(FIREBASE_URL + 'entries.json');
+    const data = await res.json();
+    allEntries = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
   }catch(e){
     allEntries = [];
   }
   render();
 }
 
-async function saveEntries(){
-  await window.storage.set(STORE_KEY, JSON.stringify(allEntries), true);
+async function addEntryRemote(entry){
+  const res = await fetch(FIREBASE_URL + 'entries.json', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(entry)
+  });
+  if(!res.ok) throw new Error('Firebase write failed: ' + res.status);
+  const data = await res.json();
+  return data.name;
 }
 
 function render(){
@@ -524,7 +530,6 @@ async function submitEntry(){
   if(!valid) return;
 
   const entry = {
-    id: Date.now() + '-' + Math.random().toString(36).slice(2,8),
     oem, surface, format, purpose, reason, by,
     ts: Date.now()
   };
@@ -535,8 +540,8 @@ async function submitEntry(){
   statusEl.className = 'status';
 
   try{
-    allEntries.push(entry);
-    await saveEntries();
+    const newId = await addEntryRemote(entry);
+    allEntries.push({ id: newId, ...entry });
     notifyTeams(entry);
     document.getElementById('oem').value = '';
     document.getElementById('surface').value = '';
@@ -549,7 +554,6 @@ async function submitEntry(){
     render();
     setTimeout(() => { statusEl.textContent = ''; }, 2500);
   }catch(e){
-    allEntries.pop();
     statusEl.textContent = 'Failed to save — try again';
     statusEl.className = 'status';
   }
@@ -564,8 +568,9 @@ document.querySelectorAll('#oem,#surface,#format,#purpose,#by').forEach(el=>{
 
 async function loadWebhook(){
   try{
-    const res = await window.storage.get(WEBHOOK_KEY, true);
-    webhookUrl = res && res.value ? res.value : '';
+    const res = await fetch(FIREBASE_URL + 'config/teams_webhook.json');
+    const data = await res.json();
+    webhookUrl = data || '';
   }catch(e){
     webhookUrl = '';
   }
@@ -618,9 +623,18 @@ document.getElementById('webhook-save').addEventListener('click', async () => {
   const val = document.getElementById('webhook').value.trim();
   const statusEl = document.getElementById('webhook-status');
   webhookUrl = val;
-  await window.storage.set(WEBHOOK_KEY, val, true);
-  statusEl.textContent = 'Saved';
-  statusEl.className = 'status ok';
+  try{
+    await fetch(FIREBASE_URL + 'config/teams_webhook.json', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(val)
+    });
+    statusEl.textContent = 'Saved';
+    statusEl.className = 'status ok';
+  }catch(e){
+    statusEl.textContent = 'Failed to save webhook';
+    statusEl.className = 'status';
+  }
   setTimeout(() => { statusEl.textContent = ''; }, 2000);
 });
 
